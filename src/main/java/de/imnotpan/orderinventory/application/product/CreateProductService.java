@@ -1,5 +1,6 @@
 package de.imnotpan.orderinventory.application.product;
 
+import de.imnotpan.orderinventory.domain.exception.ProductAlreadyExistsException;
 import de.imnotpan.orderinventory.domain.inventory.InventoryItem;
 import de.imnotpan.orderinventory.domain.product.Product;
 import de.imnotpan.orderinventory.persistence.inventory.InventoryRepository;
@@ -24,7 +25,7 @@ public class CreateProductService {
     @Transactional
     public Product create(String sku, String name, BigDecimal price){
         if(productRepository.existsBySku(sku)){
-            throw new IllegalArgumentException("Product with SKU already exists");
+            throw new ProductAlreadyExistsException(sku);
         }
         Product product = new Product(sku, name, price);
         Product savedProduct = productRepository.save(product);
