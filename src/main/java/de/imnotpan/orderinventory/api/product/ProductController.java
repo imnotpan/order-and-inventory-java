@@ -4,6 +4,7 @@ import de.imnotpan.orderinventory.api.product.dto.PagedResponse;
 import de.imnotpan.orderinventory.api.product.dto.ProductResponse;
 
 import de.imnotpan.orderinventory.application.product.CreateProductService;
+import de.imnotpan.orderinventory.application.product.GetProductService;
 import de.imnotpan.orderinventory.application.product.ListProductsService;
 import de.imnotpan.orderinventory.domain.product.Product;
 
@@ -13,6 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -21,11 +25,14 @@ import org.springframework.http.HttpStatus;
 public class ProductController {
     private final CreateProductService createProductService;
     private final ListProductsService listProductsService;
+    private final GetProductService getProductService;
 
     public ProductController(CreateProductService createProductService,
-                             ListProductsService listProductsService) {
+                             ListProductsService listProductsService,
+                                GetProductService getProductService) {
         this.createProductService = createProductService;
         this.listProductsService = listProductsService;
+        this.getProductService = getProductService;
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -67,4 +74,18 @@ public class ProductController {
                 page.getTotalPages()
         );
     }
+
+    @GetMapping("/{id}")
+    public ProductResponse getById(@PathVariable Long id) {
+        Product product = getProductService.getById(id);
+
+        return new ProductResponse(
+                product.getId(),
+                product.getSku(),
+                product.getName(),
+                product.getPrice(),
+                product.isActive()
+        );
+    }
+    
 }
