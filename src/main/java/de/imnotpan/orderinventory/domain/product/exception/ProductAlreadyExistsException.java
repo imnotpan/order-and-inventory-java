@@ -1,4 +1,4 @@
-package de.imnotpan.orderinventory.domain.exception;
+package de.imnotpan.orderinventory.domain.product.exception;
 
 public class ProductAlreadyExistsException extends RuntimeException{
 

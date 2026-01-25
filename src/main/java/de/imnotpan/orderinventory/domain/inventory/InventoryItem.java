@@ -1,5 +1,7 @@
 package de.imnotpan.orderinventory.domain.inventory;
 
+import de.imnotpan.orderinventory.domain.inventory.exception.InsufficentStockException;
+import de.imnotpan.orderinventory.domain.inventory.exception.InvalidInventoryOperationException;
 import jakarta.persistence.*;
 
 @Entity
@@ -41,7 +43,7 @@ public class InventoryItem {
             throw new IllegalArgumentException("Quantity must be positive");
         }
         if (availableQuantity < quantity){
-            throw new IllegalStateException("Insufficent stock");
+            throw new InsufficentStockException(productId, quantity, availableQuantity);
         }
         availableQuantity -= quantity;
         reservedQuantity += quantity;
@@ -52,7 +54,7 @@ public class InventoryItem {
             throw new IllegalArgumentException("Quantity must be positive");
         }
         if (reservedQuantity < quantity) {
-            throw new IllegalStateException("Cannot release more than reserved");
+        throw new InvalidInventoryOperationException( "Cannot release more than reserved stock for product " + productId);
         }
         reservedQuantity -= quantity;
         availableQuantity += quantity;
@@ -63,7 +65,7 @@ public class InventoryItem {
             throw new IllegalArgumentException("Quantity must be positive");
         }
         if (reservedQuantity < quantity) {
-            throw new IllegalStateException("Cannot consume more than reserved");
+        throw new InvalidInventoryOperationException( "Cannot consume more than reserved stock for product " + productId);
         }
         reservedQuantity -= quantity;
     }

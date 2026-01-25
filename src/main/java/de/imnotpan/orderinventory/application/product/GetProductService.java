@@ -2,9 +2,8 @@ package de.imnotpan.orderinventory.application.product;
 
 import org.springframework.stereotype.Service;
 
-import de.imnotpan.orderinventory.domain.exception.ProductNotFoundException;
 import de.imnotpan.orderinventory.domain.product.Product;
-
+import de.imnotpan.orderinventory.domain.product.exception.ProductNotFoundException;
 import de.imnotpan.orderinventory.persistence.product.ProductRepository;
 import org.springframework.transaction.annotation.Transactional;
 

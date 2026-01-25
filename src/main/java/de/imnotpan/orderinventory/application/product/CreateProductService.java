@@ -1,8 +1,8 @@
 package de.imnotpan.orderinventory.application.product;
 
-import de.imnotpan.orderinventory.domain.exception.ProductAlreadyExistsException;
 import de.imnotpan.orderinventory.domain.inventory.InventoryItem;
 import de.imnotpan.orderinventory.domain.product.Product;
+import de.imnotpan.orderinventory.domain.product.exception.ProductAlreadyExistsException;
 import de.imnotpan.orderinventory.persistence.inventory.InventoryRepository;
 import de.imnotpan.orderinventory.persistence.product.ProductRepository;
 import org.springframework.stereotype.Service;
