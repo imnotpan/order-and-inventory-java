@@ -9,19 +9,23 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.junit.jupiter.Container;
 
 
-@Testcontainers
-@SpringBootTest
+@Testcontainers(disabledWithoutDocker = true)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public abstract class AbstractIntegrationTest{
+public abstract class AbstractIntegrationTest {
 
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
-                    .withDatabaseName("order_inventory")
-                    .withUsername("test")
-                    .withPassword("test");
+    static final PostgreSQLContainer<?> postgres;
+
+    static {
+        postgres = new PostgreSQLContainer<>("postgres:16")
+                .withDatabaseName("order_inventory")
+                .withUsername("test")
+                .withPassword("test");
+        postgres.start();
+    }
 
     @DynamicPropertySource
-    static void registerDatasourceProperties(DynamicPropertyRegistry registry){
+    static void registerDatasourceProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);

@@ -15,10 +15,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-
-
 
 @RestController
 @RequestMapping("/api/v1/products")

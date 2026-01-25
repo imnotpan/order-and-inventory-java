@@ -22,4 +22,10 @@ public class GetProductService {
         return productRepository.findById(id)
                     .orElseThrow(() -> new ProductNotFoundException(id));
     }
+
+    @Transactional(readOnly = true)
+    public long getProductBySku(String sku){
+        return productRepository.findIdBySku(sku)
+            .orElseThrow(() -> new ProductNotFoundException(sku));
+    }
 }

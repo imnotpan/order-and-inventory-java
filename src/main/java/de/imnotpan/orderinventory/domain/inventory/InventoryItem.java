@@ -20,10 +20,20 @@ public class InventoryItem {
     private long version;
 
     protected InventoryItem() {}
-    public InventoryItem(Long productId, long initialQuantity) {
+    public InventoryItem(long productId, long initialQuantity) {
+        if (initialQuantity < 0){
+            throw new IllegalArgumentException("Initial quantity must be >= 0");
+        }
         this.productId = productId;
         this.availableQuantity = initialQuantity;
         this.reservedQuantity = 0;
+    }
+
+    public void restock(long quantity){
+        if(quantity <= 0){
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        availableQuantity += quantity;
     }
 
     public void reserve(long quantity){
@@ -41,11 +51,41 @@ public class InventoryItem {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
         }
-        if (availableQuantity < quantity) {
+        if (reservedQuantity < quantity) {
             throw new IllegalStateException("Cannot release more than reserved");
         }
         reservedQuantity -= quantity;
         availableQuantity += quantity;
+    }
+
+    public void consume(long quantity){
+        if(quantity <= 0){
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        if (reservedQuantity < quantity) {
+            throw new IllegalStateException("Cannot consume more than reserved");
+        }
+        reservedQuantity -= quantity;
+    }
+
+    public long totalQuantity(){
+        return reservedQuantity + availableQuantity;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (!(o instanceof InventoryItem that)) return false;
+        return productId == that.productId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(productId);
+    }
+
+    public boolean canReserve(long quantity){
+        return quantity > 0 && availableQuantity >= quantity;
     }
 
     public long getProductId() {
