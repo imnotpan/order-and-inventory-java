@@ -1,4 +1,8 @@
-### create product
+### =========================================================
+### PRODUCT API
+### =========================================================
+
+### Create product (happy path)
 POST http://localhost:8080/api/v1/products
 Content-Type: application/json
 
@@ -8,11 +12,71 @@ Content-Type: application/json
   "price": 19.99
 }
 
+### Create product (duplicate SKU → 409)
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+
+{
+  "sku": "SKU-001",
+  "name": "Producto duplicado",
+  "price": 9.99
+}
+
+### Create product (validation error → 400)
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+
+{
+  "sku": "",
+  "name": "",
+  "price": -10
+}
 
 ### Get paged products
 GET http://localhost:8080/api/v1/products?page=0&size=10
 
-### Get product by id
+### Get product by id (happy path)
 GET http://localhost:8080/api/v1/products/1
-### Get product by id (error test)
-GET http://localhost:8080/api/v1/products/21
+
+### Get product by id (not found → 404)
+GET http://localhost:8080/api/v1/products/99999
+
+
+### =========================================================
+### INVENTORY API
+### =========================================================
+
+### Get inventory by sku (initial state)
+GET http://localhost:8080/api/v1/inventory/SKU-001
+
+### Restock inventory (happy path)
+POST http://localhost:8080/api/v1/inventory/SKU-001/restock?quantity=10
+
+### Get inventory after restock
+GET http://localhost:8080/api/v1/inventory/SKU-001
+
+### Reserve inventory (happy path)
+POST http://localhost:8080/api/v1/inventory/SKU-001/reserve?quantity=5
+
+### Get inventory after reserve
+GET http://localhost:8080/api/v1/inventory/SKU-001
+
+### Reserve inventory (insufficient stock → 409)
+POST http://localhost:8080/api/v1/inventory/SKU-001/reserve?quantity=20
+
+### Get inventory after failed reserve (should be unchanged)
+GET http://localhost:8080/api/v1/inventory/SKU-001
+
+
+### =========================================================
+### INVENTORY VALIDATION / EDGE CASES
+### =========================================================
+
+### Restock inventory (invalid quantity → 400)
+POST http://localhost:8080/api/v1/inventory/SKU-001/restock?quantity=0
+
+### Reserve inventory (invalid quantity → 400)
+POST http://localhost:8080/api/v1/inventory/SKU-001/reserve?quantity=-3
+
+### Get inventory for non-existent SKU (404)
+GET http://localhost:8080/api/v1/inventory/SKU-DOES-NOT-EXIST

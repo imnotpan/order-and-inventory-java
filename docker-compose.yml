@@ -1,15 +1,21 @@
 services:
   postgres:
-    image: postgres:16
+    image: postgres:16-alpine
     container_name: order_inventory_db
     environment:
       POSTGRES_DB: order_inventory
       POSTGRES_USER: order_user
       POSTGRES_PASSWORD: order_pass
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U order_user -d order_inventory"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
 volumes:
   pgdata:
